@@ -1,0 +1,22 @@
+# Office temp/lock files
+~$*
+*.tmp
+
+# OS
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Demo videos (too large for git; keep them in OneDrive)
+*.mp4
+*.mov
+*.mkv
+
+# Secrets / local settings
+.env
+*.pfx
+*.publishsettings
+.claude/settings.local.json
+
+# Documentos internos (no publicar)
+Del transaccional y el DW tradicional a OneLake.md
