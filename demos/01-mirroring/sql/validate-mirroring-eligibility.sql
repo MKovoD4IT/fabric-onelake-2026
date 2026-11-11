@@ -37,7 +37,7 @@ INSERT INTO @cols (object_id, column_id, schema_name, table_name, column_name, t
 SELECT
     c.object_id, c.column_id, s.name, t.name, c.name,
     ut.name,
-    bt.name,
+    COALESCE(bt.name, ut.name),
     c.max_length, c.scale, c.is_computed,
     CASE WHEN c.encryption_type IS NOT NULL THEN 1 ELSE 0 END,
     k.is_key,
@@ -46,7 +46,8 @@ FROM sys.columns c
 JOIN sys.tables  t  ON t.object_id = c.object_id
 JOIN sys.schemas s  ON s.schema_id = t.schema_id
 JOIN sys.types   ut ON ut.user_type_id = c.user_type_id
-JOIN sys.types   bt ON bt.user_type_id = c.system_type_id
+-- LEFT: los tipos CLR (hierarchyid, geometry, geography) tienen system_type_id 240, que no es un user_type_id
+LEFT JOIN sys.types bt ON bt.user_type_id = c.system_type_id
 -- ¿La columna es parte de la PK (o del índice clustered si no hay PK)?
 OUTER APPLY (
     SELECT CAST(CASE WHEN EXISTS (
